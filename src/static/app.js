@@ -4,6 +4,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const signupForm = document.getElementById("signup-form");
   const messageDiv = document.getElementById("message");
   
+  // View toggle elements
+  const listViewBtn = document.getElementById("list-view-btn");
+  const calendarViewBtn = document.getElementById("calendar-view-btn");
+  const listView = document.getElementById("list-view");
+  const calendarView = document.getElementById("calendar-view");
+  const calendarGrid = document.getElementById("calendar-grid");
+  const scheduleEmailInput = document.getElementById("schedule-email");
+  const loadScheduleBtn = document.getElementById("load-schedule-btn");
+  const studentScheduleDiv = document.getElementById("student-schedule");
   // Authentication UI elements
   const loginBtn = document.getElementById("login-btn");
   const logoutBtn = document.getElementById("logout-btn");
@@ -292,6 +301,186 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // View toggle functionality
+  listViewBtn.addEventListener("click", () => {
+    listViewBtn.classList.add("active");
+    calendarViewBtn.classList.remove("active");
+    listView.classList.remove("hidden");
+    calendarView.classList.add("hidden");
+  });
+
+  calendarViewBtn.addEventListener("click", () => {
+    calendarViewBtn.classList.add("active");
+    listViewBtn.classList.remove("active");
+    calendarView.classList.remove("hidden");
+    listView.classList.add("hidden");
+    fetchCalendar(); // Load calendar when switching to calendar view
+  });
+
+  // Fetch and display calendar data
+  async function fetchCalendar() {
+    try {
+      const response = await fetch("/calendar");
+      const calendarData = await response.json();
+
+      // Define time slots to display
+      const timeSlots = [
+        { label: "2:00 PM", time: "14:00" },
+        { label: "3:30 PM", time: "15:30" },
+        { label: "4:00 PM", time: "16:00" }
+      ];
+
+      const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+      // Build calendar table
+      let tableHTML = '<table class="calendar-table"><thead><tr><th>Time</th>';
+      days.forEach(day => {
+        tableHTML += `<th>${day}</th>`;
+      });
+      tableHTML += '</tr></thead><tbody>';
+
+      // Create rows for each time slot
+      timeSlots.forEach(slot => {
+        tableHTML += `<tr><td class="time-column">${slot.label}</td>`;
+        
+        days.forEach(day => {
+          const dayActivities = calendarData[day] || [];
+          const activitiesAtTime = dayActivities.filter(activity => 
+            activity.start_time === slot.time
+          );
+
+          tableHTML += '<td>';
+          activitiesAtTime.forEach(activity => {
+            const capacityPercent = (activity.participants_count / activity.max_participants) * 100;
+            const capacityClass = capacityPercent >= 90 ? 'full' : capacityPercent >= 70 ? 'filling' : 'available';
+            
+            tableHTML += `
+              <div class="calendar-activity ${activity.category}" 
+                   data-activity="${activity.name}"
+                   title="Click for details">
+                <div class="activity-name">${activity.name}</div>
+                <div class="activity-time">${slot.label} - ${formatTime(activity.end_time)}</div>
+                <div class="activity-capacity">
+                  <span class="capacity-badge">${activity.spots_left} spots left</span>
+                </div>
+              </div>
+            `;
+          });
+          tableHTML += '</td>';
+        });
+        
+        tableHTML += '</tr>';
+      });
+
+      tableHTML += '</tbody></table>';
+      calendarGrid.innerHTML = tableHTML;
+
+      // Add click handlers for activities
+      document.querySelectorAll('.calendar-activity').forEach(element => {
+        element.addEventListener('click', (e) => {
+          const activityName = e.currentTarget.getAttribute('data-activity');
+          showActivityDetails(activityName);
+        });
+      });
+
+    } catch (error) {
+      calendarGrid.innerHTML = "<p>Failed to load calendar. Please try again later.</p>";
+      console.error("Error fetching calendar:", error);
+    }
+  }
+
+  // Format time from 24-hour to 12-hour format
+  function formatTime(time24) {
+    const [hours, minutes] = time24.split(':');
+    const hour = parseInt(hours);
+    const period = hour >= 12 ? 'PM' : 'AM';
+    const hour12 = hour % 12 || 12;
+    return `${hour12}:${minutes} ${period}`;
+  }
+
+  // Show activity details (could be expanded to a modal)
+  function showActivityDetails(activityName) {
+    // Switch to list view and scroll to the activity
+    listViewBtn.click();
+    
+    // Find the activity card
+    const activityCards = document.querySelectorAll('.activity-card h4');
+    for (let card of activityCards) {
+      if (card.textContent === activityName) {
+        card.parentElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        card.parentElement.style.backgroundColor = '#fff3cd';
+        setTimeout(() => {
+          card.parentElement.style.backgroundColor = '#f9f9f9';
+        }, 2000);
+        break;
+      }
+    }
+  }
+
+  // Load student schedule
+  loadScheduleBtn.addEventListener("click", async () => {
+    const email = scheduleEmailInput.value.trim();
+    
+    if (!email) {
+      studentScheduleDiv.innerHTML = '<p class="schedule-hint" style="color: #c62828;">Please enter your email address</p>';
+      return;
+    }
+
+    try {
+      const response = await fetch(`/student/${encodeURIComponent(email)}/schedule`);
+      const scheduleData = await response.json();
+
+      if (scheduleData.activities.length === 0) {
+        studentScheduleDiv.innerHTML = `
+          <div class="empty-schedule">
+            <p>No activities found</p>
+            <p style="font-size: 14px;">You haven't signed up for any activities yet.</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Group activities by day
+      const dayGroups = {};
+      scheduleData.activities.forEach(activity => {
+        if (!dayGroups[activity.day]) {
+          dayGroups[activity.day] = [];
+        }
+        dayGroups[activity.day].push(activity);
+      });
+
+      // Build schedule HTML
+      let scheduleHTML = '';
+      const dayOrder = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      
+      dayOrder.forEach(day => {
+        if (dayGroups[day]) {
+          dayGroups[day].forEach(activity => {
+            scheduleHTML += `
+              <div class="schedule-item ${activity.category}">
+                <div class="day-label">${day} - ${activity.name}</div>
+                <div class="time-label">${formatTime(activity.start_time)} - ${formatTime(activity.end_time)}</div>
+              </div>
+            `;
+          });
+        }
+      });
+
+      // Add summary
+      scheduleHTML += `
+        <div class="schedule-summary">
+          <h4>📊 Schedule Summary</h4>
+          <p><strong>Total Activities:</strong> ${scheduleData.total_activities}</p>
+          <p><strong>Total Sessions:</strong> ${scheduleData.activities.length}</p>
+        </div>
+      `;
+
+      studentScheduleDiv.innerHTML = scheduleHTML;
+
+    } catch (error) {
+      studentScheduleDiv.innerHTML = '<p class="schedule-hint" style="color: #c62828;">Failed to load schedule. Please try again.</p>';
+      console.error("Error fetching schedule:", error);
+    }
   // Authentication event listeners
   loginBtn.addEventListener("click", () => {
     loginModal.style.display = "block";

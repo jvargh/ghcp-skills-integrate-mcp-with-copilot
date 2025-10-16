@@ -325,3 +325,295 @@ footer {
   padding: 20px;
   color: #666;
 }
+
+/* View Toggle Navigation */
+.view-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.view-btn {
+  padding: 12px 24px;
+  background-color: #f0f0f0;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s;
+}
+
+.view-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.view-btn.active {
+  background-color: #1a237e;
+  color: white;
+  border-color: #1a237e;
+}
+
+/* View Containers */
+.view-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+}
+
+.view-container.hidden {
+  display: none;
+}
+
+/* Calendar View Styles */
+#calendar-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.calendar-header h3 {
+  margin: 0;
+  color: #1a237e;
+}
+
+.calendar-legend {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+}
+
+.color-box {
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.color-box.sports {
+  background-color: #2196F3;
+}
+
+.color-box.academic {
+  background-color: #4CAF50;
+}
+
+.color-box.arts {
+  background-color: #9C27B0;
+}
+
+/* Calendar Grid */
+#calendar-grid {
+  min-width: 800px;
+}
+
+.calendar-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+.calendar-table th {
+  background-color: #1a237e;
+  color: white;
+  padding: 12px 8px;
+  text-align: center;
+  font-weight: bold;
+  border: 1px solid #ddd;
+}
+
+.calendar-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  vertical-align: top;
+  min-height: 80px;
+  background-color: #fafafa;
+}
+
+.calendar-table td.time-column {
+  background-color: #f5f5f5;
+  font-weight: bold;
+  text-align: center;
+  width: 100px;
+  color: #666;
+}
+
+.calendar-activity {
+  margin: 4px 0;
+  padding: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  font-size: 13px;
+  color: white;
+}
+
+.calendar-activity:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.calendar-activity.sports {
+  background-color: #2196F3;
+}
+
+.calendar-activity.academic {
+  background-color: #4CAF50;
+}
+
+.calendar-activity.arts {
+  background-color: #9C27B0;
+}
+
+.calendar-activity.other {
+  background-color: #757575;
+}
+
+.activity-name {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.activity-time {
+  font-size: 11px;
+  opacity: 0.9;
+}
+
+.activity-capacity {
+  font-size: 11px;
+  margin-top: 4px;
+  opacity: 0.9;
+}
+
+.capacity-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  font-size: 10px;
+}
+
+/* Student Schedule Section */
+#student-schedule-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+#student-schedule-container h3 {
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+  color: #1a237e;
+}
+
+#student-schedule {
+  margin-top: 20px;
+}
+
+.schedule-hint {
+  color: #666;
+  font-style: italic;
+  text-align: center;
+  padding: 20px;
+}
+
+.schedule-item {
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 4px;
+  color: white;
+  font-size: 14px;
+}
+
+.schedule-item .day-label {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.schedule-item .time-label {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.schedule-summary {
+  margin-top: 15px;
+  padding: 15px;
+  background-color: #e8f5e9;
+  border-radius: 4px;
+  border-left: 4px solid #4CAF50;
+}
+
+.schedule-summary h4 {
+  margin: 0 0 8px 0;
+  color: #2e7d32;
+  font-size: 16px;
+}
+
+.schedule-summary p {
+  margin: 4px 0;
+  color: #1b5e20;
+  font-size: 14px;
+}
+
+#load-schedule-btn {
+  margin-top: 10px;
+}
+
+/* Empty state */
+.empty-schedule {
+  text-align: center;
+  padding: 30px;
+  color: #999;
+}
+
+.empty-schedule p {
+  font-size: 16px;
+  margin: 10px 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .calendar-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  #calendar-grid {
+    overflow-x: auto;
+  }
+  
+  .view-toggle {
+    flex-direction: column;
+  }
+  
+  .view-btn {
+    width: 100%;
+  }
+}

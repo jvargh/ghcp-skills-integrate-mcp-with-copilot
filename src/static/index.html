@@ -24,33 +24,72 @@
       </div>
     </header>
 
-    <main>
-      <section id="activities-container">
-        <h3>Available Activities</h3>
-        <div id="activities-list">
-          <!-- Activities will be loaded here -->
-          <p>Loading activities...</p>
-        </div>
-      </section>
+    <!-- View Toggle -->
+    <nav class="view-toggle">
+      <button id="list-view-btn" class="view-btn active">📋 List View</button>
+      <button id="calendar-view-btn" class="view-btn">📅 Calendar View</button>
+    </nav>
 
-      <section id="signup-container">
-        <h3>Sign Up for an Activity</h3>
-        <form id="signup-form">
-          <div class="form-group">
-            <label for="email">Student Email:</label>
-            <input type="email" id="email" required placeholder="your-email@mergington.edu" />
+    <main>
+      <!-- List View (existing) -->
+      <div id="list-view" class="view-container">
+        <section id="activities-container">
+          <h3>Available Activities</h3>
+          <div id="activities-list">
+            <!-- Activities will be loaded here -->
+            <p>Loading activities...</p>
           </div>
-          <div class="form-group">
-            <label for="activity">Select Activity:</label>
-            <select id="activity" required>
-              <option value="">-- Select an activity --</option>
-              <!-- Activity options will be loaded here -->
-            </select>
+        </section>
+
+        <section id="signup-container">
+          <h3>Sign Up for an Activity</h3>
+          <form id="signup-form">
+            <div class="form-group">
+              <label for="email">Student Email:</label>
+              <input type="email" id="email" required placeholder="your-email@mergington.edu" />
+            </div>
+            <div class="form-group">
+              <label for="activity">Select Activity:</label>
+              <select id="activity" required>
+                <option value="">-- Select an activity --</option>
+                <!-- Activity options will be loaded here -->
+              </select>
+            </div>
+            <button type="submit">Sign Up</button>
+          </form>
+          <div id="message" class="hidden"></div>
+        </section>
+      </div>
+
+      <!-- Calendar View (new) -->
+      <div id="calendar-view" class="view-container hidden">
+        <section id="calendar-container">
+          <div class="calendar-header">
+            <h3>Weekly Activity Calendar</h3>
+            <div class="calendar-legend">
+              <span class="legend-item"><span class="color-box sports"></span> Sports</span>
+              <span class="legend-item"><span class="color-box academic"></span> Academic</span>
+              <span class="legend-item"><span class="color-box arts"></span> Arts</span>
+            </div>
           </div>
-          <button type="submit">Sign Up</button>
-        </form>
-        <div id="message" class="hidden"></div>
-      </section>
+          <div id="calendar-grid">
+            <!-- Calendar will be loaded here -->
+            <p>Loading calendar...</p>
+          </div>
+        </section>
+
+        <section id="student-schedule-container">
+          <h3>My Schedule</h3>
+          <div class="form-group">
+            <label for="schedule-email">Enter Your Email:</label>
+            <input type="email" id="schedule-email" placeholder="your-email@mergington.edu" />
+            <button id="load-schedule-btn">Load My Schedule</button>
+          </div>
+          <div id="student-schedule">
+            <p class="schedule-hint">Enter your email to view your personal schedule</p>
+          </div>
+        </section>
+      </div>
     </main>
 
     <footer>
