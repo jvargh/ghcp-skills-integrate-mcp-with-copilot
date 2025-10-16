@@ -1,0 +1,16 @@
+{
+  "teachers": {
+    "admin": {
+      "password": "school2023",
+      "name": "Administrator"
+    },
+    "smith": {
+      "password": "teacher123",
+      "name": "Ms. Smith"
+    },
+    "johnson": {
+      "password": "principal456",
+      "name": "Mr. Johnson"
+    }
+  }
+}
